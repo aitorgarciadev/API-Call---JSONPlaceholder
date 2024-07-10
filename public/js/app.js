@@ -6,22 +6,26 @@ class User {
     this.phone = phone;
   }
 }
+
 class UserController {
   constructor() {
     this.apiEndpoint = "https://jsonplaceholder.typicode.com/users";
     this.userList = [];
     this.initialize();
   }
+
   async initialize() {
     await this.fetchUsers();
     this.renderUsers();
     this.setupEventListeners();
   }
+
   async fetchUsers() {
     try {
       const response = await fetch(this.apiEndpoint);
       if (!response.ok) throw new Error("Failed to load users");
       const usersData = await response.json();
+      console.log(usersData); // Imprime los datos en la consola
       this.userList = usersData.map(
         (user) => new User(user.id, user.name, user.address.city, user.phone)
       );
@@ -29,6 +33,7 @@ class UserController {
       console.error("Error fetching users:", error);
     }
   }
+
   renderUsers() {
     const tableBody = document.querySelector("#usersTable tbody");
     tableBody.innerHTML = "";
@@ -42,6 +47,7 @@ class UserController {
       tableBody.appendChild(row);
     });
   }
+
   async getUserById(id) {
     try {
       const response = await fetch(`${this.apiEndpoint}/${id}`);
@@ -57,6 +63,7 @@ class UserController {
       console.error("Error fetching user:", error);
     }
   }
+
   async displayUserInfo(id) {
     const user = await this.getUserById(id);
     const userInfoDiv = document.getElementById("userInfo");
@@ -70,6 +77,7 @@ class UserController {
       userInfoDiv.innerHTML = "<p>User not found</p>";
     }
   }
+
   setupEventListeners() {
     document.getElementById("userForm").addEventListener("submit", (event) => {
       event.preventDefault();
@@ -82,4 +90,5 @@ class UserController {
     });
   }
 }
+
 new UserController();
